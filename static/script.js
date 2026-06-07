@@ -1,12 +1,7 @@
-// =====================================================
-// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-// =====================================================
 let revenueChart = null;
 let reportChart = null;
 
-// =====================================================
-// НАВИГАЦИЯ (с активным пунктом меню)
-// =====================================================
+
 document.querySelectorAll('.nav-menu a').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -25,8 +20,7 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     });
 });
 
-// =====================================================
-// ДАШБОРД
+
 
 function loadDashboard() {
     fetch('/api/coworkings')
@@ -90,9 +84,7 @@ function loadDashboard() {
         .catch(err => console.error('Ошибка графика выручки:', err));
 }
 
-// =====================================================
-// ОТЧЁТЫ (график загруженности)
-// =====================================================
+
 function loadReports() {
     const coworkingId = document.getElementById('report-coworking')?.value || 1;
 
@@ -127,9 +119,6 @@ function loadReports() {
         .catch(err => console.error('Ошибка графика загруженности:', err));
 }
 
-// =====================================================
-// БРОНИРОВАНИЯ
-// =====================================================
 function loadBookings() {
     const status = document.getElementById('booking-status-filter')?.value || '';
     let url = '/api/admin/bookings';
@@ -196,9 +185,6 @@ function cancelBooking(id) {
     }
 }
 
-// =====================================================
-// КОВОРКИНГИ
-// =====================================================
 function loadCoworkings() {
     fetch('/api/coworkings')
         .then(r => r.json())
@@ -254,7 +240,7 @@ function addCoworking() {
             hideAddCoworkingForm();
             loadCoworkings();
             loadDashboard();
-            // Очищаем форму
+
             document.getElementById('new-name').value = '';
             document.getElementById('new-address').value = '';
             document.getElementById('new-metro').value = '';
@@ -271,9 +257,6 @@ function addCoworking() {
     xhr.send(fd);
 }
 
-// =====================================================
-// ПРОМОКОДЫ
-// =====================================================
 function loadPromotions() {
     fetch('/api/admin/promotions')
         .then(r => r.json())
@@ -327,7 +310,4 @@ function addPromo() {
         .catch(() => alert('Ошибка'));
 }
 
-// =====================================================
-// ЗАГРУЗКА ПРИ СТАРТЕ
-// =====================================================
 loadDashboard();

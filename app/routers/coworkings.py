@@ -11,7 +11,6 @@ from fastapi import Form
 router = APIRouter(prefix="/api", tags=["coworkings"])
 
 
-# 1. Список всех коворкингов
 @router.get("/coworkings")
 def get_coworkings(
     metro: Optional[str] = Query(None),
@@ -84,7 +83,7 @@ def get_coworkings(
     return result
 
 
-# 2. Залы коворкинга
+
 @router.get("/coworkings/{coworking_id}/spaces")
 def get_coworking_spaces(coworking_id: int, db: Session = Depends(get_db)):
     spaces = db.query(Space).filter(
@@ -112,7 +111,7 @@ def get_coworking_spaces(coworking_id: int, db: Session = Depends(get_db)):
     return result
 
 
-# 3. Детали коворкинга
+
 @router.get("/coworkings/{coworking_id}")
 def get_coworking_detail(coworking_id: int, db: Session = Depends(get_db)):
     coworking = db.query(Coworking).filter(Coworking.id == coworking_id).first()
@@ -120,7 +119,7 @@ def get_coworking_detail(coworking_id: int, db: Session = Depends(get_db)):
     if not coworking:
         raise HTTPException(status_code=404, detail="Коворкинг не найден")
 
-    photos = [f"http://10.0.2.2:8000{photo.photo_url}" for photo in coworking.photos]
+    photos = [f"http://45.142.36.234:8000{photo.photo_url}" for photo in coworking.photos]
 
     spaces = [
         SpaceOut(
@@ -137,7 +136,6 @@ def get_coworking_detail(coworking_id: int, db: Session = Depends(get_db)):
         for space in coworking.spaces
     ]
 
-    # Считаем загруженность
     total_capacity = db.query(func.sum(Space.capacity)).filter(
         Space.coworking_id == coworking_id,
         Space.is_active == True
@@ -171,7 +169,6 @@ def get_coworking_detail(coworking_id: int, db: Session = Depends(get_db)):
     )
 
 
-# 4. Загруженность (отдельный эндпоинт)
 @router.get("/coworkings/{coworking_id}/occupancy")
 def get_coworking_occupancy(coworking_id: int, db: Session = Depends(get_db)):
     coworking = db.query(Coworking).filter(Coworking.id == coworking_id).first()
@@ -213,7 +210,7 @@ def get_coworking_occupancy(coworking_id: int, db: Session = Depends(get_db)):
     }
 
 
-# 5. Детали конкретного пространства
+
 @router.get("/spaces/{space_id}")
 def get_space_detail(space_id: int, db: Session = Depends(get_db)):
     space = db.query(Space).filter(Space.id == space_id).first()

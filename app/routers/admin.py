@@ -66,10 +66,10 @@ def get_occupancy_report(
         Booking.date >= start_date
     ).group_by(Booking.date).order_by(Booking.date).all()
 
-    # Создаём словарь для быстрого доступа
+
     booked_dict = {r[0]: r[1] for r in rows}
 
-    # Формируем список дат и значений
+
     labels = []
     values = []
     for i in range(days):
@@ -93,7 +93,7 @@ def get_revenue_report(
     total = db.query(func.sum(Payment.amount)).join(Booking).filter(
         Booking.coworking_id == coworking_id,
         Payment.status == "completed",
-        Payment.id > 0  # ← временно убрали фильтр по дате
+        Payment.id > 0
     ).scalar() or 0
     return {"total_revenue": float(total)}
 
@@ -108,12 +108,12 @@ def get_daily_revenue(
     start_date = date.today() - timedelta(days=days - 1)
 
     rows = db.query(
-        Booking.date,  # ← используем дату бронирования, а не платежа
+        Booking.date,
         func.sum(Payment.amount).label('total')
     ).join(Booking).filter(
         Booking.coworking_id == coworking_id,
         Payment.status == "completed",
-        Booking.date >= start_date  # ← фильтр по дате бронирования
+        Booking.date >= start_date
     ).group_by(Booking.date).order_by(Booking.date).all()
 
     revenue_dict = {r[0]: float(r[1]) for r in rows}
