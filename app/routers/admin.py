@@ -100,7 +100,6 @@ def get_revenue_report(
 
 @router.get("/reports/revenue/daily")
 def get_daily_revenue(
-        coworking_id: int,
         days: int = 7,
         db: Session = Depends(get_db)
 ):
