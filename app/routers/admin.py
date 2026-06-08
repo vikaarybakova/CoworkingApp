@@ -107,14 +107,15 @@ def get_daily_revenue(
     update_expired_bookings(db)
     start_date = date.today() - timedelta(days=days - 1)
 
+
     rows = db.query(
-        Booking.date,
+        func.date(Payment.paid_at).label('date'),
         func.sum(Payment.amount).label('total')
-    ).join(Booking).filter(
+    ).join(Booking, Payment.booking_id == Booking.id).filter(
         Booking.coworking_id == coworking_id,
         Payment.status == "completed",
-        Booking.date >= start_date
-    ).group_by(Booking.date).order_by(Booking.date).all()
+        func.date(Payment.paid_at) >= start_date
+    ).group_by(func.date(Payment.paid_at)).order_by(func.date(Payment.paid_at)).all()
 
     revenue_dict = {r[0]: float(r[1]) for r in rows}
 
